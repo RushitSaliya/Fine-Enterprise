@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EnterDataDialog</class>
+ <widget class="QDialog" name="EnterDataDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>506</width>
+    <height>436</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Enter Data</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="14" column="2">
+    <widget class="QPushButton" name="btn_cancel">
+     <property name="text">
+      <string>Cancel</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="1">
+    <widget class="QLineEdit" name="line_edit_cheque_no"/>
+   </item>
+   <item row="10" column="0">
+    <widget class="QLabel" name="lbl_chalan_no">
+     <property name="text">
+      <string>Chalan No.:</string>
+     </property>
+     <property name="buddy">
+      <cstring>line_edit_chalan_no</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QLabel" name="lbl_payment_paid_date">
+     <property name="text">
+      <string>Payment paid date:</string>
+     </property>
+     <property name="buddy">
+      <cstring>date_edit_payment_paid_date</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="13" column="2">
+    <widget class="QPushButton" name="btn_add_record">
+     <property name="text">
+      <string>Add Record</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QLineEdit" name="line_edit_qty">
+     <property name="maximumSize">
+      <size>
+       <width>341</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="inputMethodHints">
+      <set>Qt::ImhNone</set>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="1">
+    <widget class="QLineEdit" name="line_edit_chalan_no"/>
+   </item>
+   <item row="11" column="0">
+    <widget class="QLabel" name="lbl_remarks">
+     <property name="text">
+      <string>Remarks:</string>
+     </property>
+     <property name="buddy">
+      <cstring>text_edit_remarks</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="llbl_selling_quantity">
+     <property name="text">
+      <string>Quantity:</string>
+     </property>
+     <property name="buddy">
+      <cstring>line_edit_qty</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="lbl_size">
+     <property name="text">
+      <string>Size:</string>
+     </property>
+     <property name="buddy">
+      <cstring>combo_box_size</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QLineEdit" name="line_edit_selling_rate">
+     <property name="maxLength">
+      <number>32700</number>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QComboBox" name="combo_box_size">
+     <property name="minimumSize">
+      <size>
+       <width>69</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>69</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <item>
+      <property name="text">
+       <string>36</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>44</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>48</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>54</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>58</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>60</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>63</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="6" column="0">
+    <widget class="QLabel" name="lbl_purchase_rate_of_44_size">
+     <property name="text">
+      <string>Purchase rate of 44 size:</string>
+     </property>
+     <property name="buddy">
+      <cstring>line_edit_purchase_rate_of_44_size</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="0">
+    <widget class="QLabel" name="lbl_cheque_no">
+     <property name="text">
+      <string>Cheque No.:</string>
+     </property>
+     <property name="buddy">
+      <cstring>line_edit_cheque_no</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1">
+    <widget class="QDateEdit" name="date_edit_payment_paid_date">
+     <property name="displayFormat">
+      <string>dd/MM/yyyy</string>
+     </property>
+     <property name="calendarPopup">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <widget class="QLineEdit" name="line_edit_purchase_rate_of_44_size"/>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="lbl_selling_rate">
+     <property name="text">
+      <string>Selling Rate:</string>
+     </property>
+     <property name="buddy">
+      <cstring>line_edit_selling_rate</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0">
+    <widget class="QLabel" name="lbl_payment_paid_amount">
+     <property name="text">
+      <string>Payment paid amount:</string>
+     </property>
+     <property name="buddy">
+      <cstring>line_edit_payment_paid_amount</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="1">
+    <widget class="QLineEdit" name="line_edit_payment_paid_amount"/>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLineEdit" name="line_edit_party_name"/>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="lbl_gsm">
+     <property name="text">
+      <string>GSM:</string>
+     </property>
+     <property name="buddy">
+      <cstring>combo_box_gsm</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QComboBox" name="combo_box_gsm">
+     <property name="minimumSize">
+      <size>
+       <width>69</width>
+       <height>22</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>69</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <item>
+      <property name="text">
+       <string>70</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>100</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="lbl_date">
+     <property name="text">
+      <string>Date:</string>
+     </property>
+     <property name="buddy">
+      <cstring>date_edit_date</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QDateEdit" name="date_edit_date">
+     <property name="currentSection">
+      <enum>QDateTimeEdit::DaySection</enum>
+     </property>
+     <property name="displayFormat">
+      <string>dd/MM/yyyy</string>
+     </property>
+     <property name="calendarPopup">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="lbl_party_name">
+     <property name="text">
+      <string>Party Name:</string>
+     </property>
+     <property name="buddy">
+      <cstring>line_edit_party_name</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="1">
+    <widget class="QTextEdit" name="text_edit_remarks"/>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>date_edit_date</tabstop>
+  <tabstop>line_edit_party_name</tabstop>
+  <tabstop>combo_box_gsm</tabstop>
+  <tabstop>combo_box_size</tabstop>
+  <tabstop>line_edit_qty</tabstop>
+  <tabstop>line_edit_selling_rate</tabstop>
+  <tabstop>line_edit_purchase_rate_of_44_size</tabstop>
+  <tabstop>date_edit_payment_paid_date</tabstop>
+  <tabstop>line_edit_payment_paid_amount</tabstop>
+  <tabstop>line_edit_cheque_no</tabstop>
+  <tabstop>line_edit_chalan_no</tabstop>
+  <tabstop>text_edit_remarks</tabstop>
+  <tabstop>btn_add_record</tabstop>
+  <tabstop>btn_cancel</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>
