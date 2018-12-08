@@ -1,4 +1,6 @@
-"""Data Entry desktop app for Fine Enterprise"""
+"""
+Data Entry desktop app for Fine Enterprise
+"""
 
 import sys
 import pandas as pd
@@ -12,11 +14,8 @@ from PyQt5.QtCore import *
 from PyQt5 import QtCore
 from PyQt5 import QtGui
 
-import MainDialog
-import LogInDialog
-import SellingEnterDataDialog
-import SellingViewDataDialog
-import ViewStockDialog
+from Py_Scripts import LogInDialog, MainDialog, ViewStockDialog, SellingEnterDataDialog, SellingViewDataDialog, \
+    SellingDeleteDataDialog
 
 
 class MainDialogWindow(QDialog, MainDialog.Ui_MainDialog):
@@ -26,16 +25,16 @@ class MainDialogWindow(QDialog, MainDialog.Ui_MainDialog):
 
         self.view_stock_window_obj = None
         self.selling_enter_data_window_obj = None
-        self.selling_view_data_window_obj = None
+        self.selling_view_and_delete_data_window_obj = None
 
         self.btn_enter_data.hide()
-        self.btn_view_data.hide()
-        self.btn_delete_data.hide()
+        self.btn_view_and_delete_data.hide()
         self.btn_view_graph.hide()
 
         self.btn_stock.clicked.connect(self.pop_up_stock_dialog)
+
         self.btn_enter_data.clicked.connect(self.pop_up_selling_enter_data_dialog)
-        self.btn_view_data.clicked.connect(self.pop_up_selling_view_data_dialog)
+        self.btn_view_and_delete_data.clicked.connect(self.pop_up_selling_view_data_dialog)
 
     def pop_up_stock_dialog(self):
         self.view_stock_window_obj = ViewStockDialogWindow()
@@ -44,9 +43,9 @@ class MainDialogWindow(QDialog, MainDialog.Ui_MainDialog):
 
     def pop_up_selling_view_data_dialog(self):
         if self.radio_btn_selling.isChecked():
-            self.selling_view_data_window_obj = SellingViewDataDialogWindow()
-            self.selling_view_data_window_obj.retranslateUi(self.selling_view_data_window_obj)
-            self.selling_view_data_window_obj.show()
+            self.selling_view_and_delete_data_window_obj = SellingViewDataDialogWindow()
+            self.selling_view_and_delete_data_window_obj.retranslateUi(self.selling_view_and_delete_data_window_obj)
+            self.selling_view_and_delete_data_window_obj.show()
         else:
             pass
 
@@ -79,7 +78,8 @@ class LoginDialogWindow(QDialog, LogInDialog.Ui_LoginDialog):
             self.hide()
         else:
             self.showErrorMessage = QtWidgets.QErrorMessage()
-            self.showErrorMessage.showMessage("Incorrect Password!!!")
+            self.showErrorMessage.setWindowTitle("Error Message")
+            self.showErrorMessage.showMessage("Incorrect Password!!! 😬")
             self.showErrorMessage.show()
             self.line_edit_password.clear()
 
@@ -111,19 +111,20 @@ class ViewStockDialogWindow(QDialog, ViewStockDialog.Ui_ViewStockDialog):
                 self.tabel_widget_stock.setItem(i, j, QTableWidgetItem(self.value))
 
 
-class SellingViewDataDialogWindow(QDialog, SellingViewDataDialog.Ui_SellingViewData):
+class SellingViewDataDialogWindow(QDialog, SellingViewDataDialog.Ui_SellingViewDataDialog):
     def __init__(self):
         QDialog.__init__(self)
         self.setupUi(self)
         self.showFullScreen()
 
+        self.delete_data_obj = None
+
+        self.btn_delete.clicked.connect(self.delete_record)
         self.btn_ok.clicked.connect(self.hide)
 
         with open("data/DataEntrySelling.csv", "r") as file:
             file_reader = csv.reader(file, delimiter=",")
             rows = len(list(file_reader)) - 1
-
-        self.table_widget_view_data.setColumnWidth(0, 1)
 
         self.table_widget_view_data.setRowCount(rows)
         self.table_widget_view_data.setColumnCount(13)
@@ -135,17 +136,75 @@ class SellingViewDataDialogWindow(QDialog, SellingViewDataDialog.Ui_SellingViewD
                         11: "Remarks", 12: "Profit"}
 
         self.table_widget_view_data.setHorizontalHeaderLabels(["Date", "Party", "GSM", "Size", "Qty", "Rate",
-                                                               "Payment+GST(12%)",
-                                                               "Payment Date", "Paid Amount", "Cheque No.",
-                                                               "Chalan No.", "Remarks", "Profit"])
+                                                               "Payment+GST(12%)", "Payment Date", "Paid Amount",
+                                                               "Cheque No.", "Chalan No.", "Remarks", "Profit"])
 
         for i in range(rows):
             for j in dict_headers:
                 self.value = str(selling_data_entry.at[i, dict_headers[j]])
                 self.table_widget_view_data.setItem(i, j, QTableWidgetItem(self.value))
 
+    def delete_record(self):
+        self.delete_data_obj = SellingDeleteDataDialogWindow()
+        self.delete_data_obj.retranslateUi(self.delete_data_obj)
+        self.delete_data_obj.show()
 
-class SellingEnterDataDialogWindow(QDialog, SellingEnterDataDialog.Ui_EnterDataDialog):
+
+class SellingDeleteDataDialogWindow(QDialog, SellingDeleteDataDialog.Ui_SellingDeleteDataDialog):
+    def __init__(self):
+        QDialog.__init__(self)
+        self.setupUi(self)
+        self.show()
+
+        self.index = None
+        self.showErrorMessage = None
+        self.file_of_selling = None
+        self.file_of_stock = None
+        self.deleted_stock = None
+        self.existing_stock = None
+        self.size = None
+        self.dict_size_to_index = {36: 0, 44: 1, 48: 2, 54: 3, 58: 4, 60: 5, 63: 6}
+
+        self.btn_delete.clicked.connect(self.delete_selected_record)
+        self.btn_delete.clicked.connect(self.hide)
+
+    def delete_selected_record(self):
+        self.index = int(self.line_edit_index.text()) - 1
+
+        with open("data/DataEntrySelling.csv", "r") as file:
+            file_reader = csv.reader(file, delimiter=",")
+            rows = len(list(file_reader)) - 1
+
+        self.file_of_selling = pd.read_csv("data/DataEntrySelling.csv")
+        self.file_of_stock = pd.read_csv("data/Stock.csv")
+
+        warnings.simplefilter(action="ignore", category=FutureWarning)
+
+        self.deleted_stock = self.file_of_selling.at[self.index, "Qty"]
+        self.size = self.file_of_selling.at[self.index, "Size"]
+        self.existing_stock = self.file_of_stock.at[self.dict_size_to_index[self.size], "Qty"]
+
+        self.file_of_stock.set_value(self.dict_size_to_index[self.size], "Qty",
+                                     self.existing_stock + self.deleted_stock)
+        self.file_of_stock.to_csv("data/Stock.csv", index=None)
+
+        if self.index < rows:
+            file = pd.read_csv("data/DataEntrySelling.csv")
+            file.drop(file.index[self.index], inplace=True)
+            file.to_csv("data/DataEntrySelling.csv", index=None)
+
+            self.showErrorMessage = QtWidgets.QErrorMessage()
+            self.showErrorMessage.setWindowTitle("Success Message")
+            self.showErrorMessage.showMessage("Record successfully deleted!!! 😃")
+            self.showErrorMessage.show()
+        else:
+            self.showErrorMessage = QtWidgets.QErrorMessage()
+            self.showErrorMessage.setWindowTitle("Error Message")
+            self.showErrorMessage.showMessage("Index out of bound!!! 😬")
+            self.showErrorMessage.show()
+
+
+class SellingEnterDataDialogWindow(QDialog, SellingEnterDataDialog.Ui_SellingEnterDataDialog):
     def __init__(self):
         QDialog.__init__(self)
         self.setupUi(self)
@@ -190,9 +249,10 @@ class SellingEnterDataDialogWindow(QDialog, SellingEnterDataDialog.Ui_EnterDataD
 
         self.final_bill = (self.selling_rate * self.selling_quantity) + \
                           ((self.selling_rate * self.selling_quantity) * 12) / 100.0
-
-        # To avoid FutureWarning in pandas I have written following statement and still
-        # If you don't get importance of the following line of code then feel free to erase it!!!
+        """
+        To avoid FutureWarning in pandas I have written following statement and still
+        if you don't get importance of the following line of code then feel free to erase it!!!
+        """
         warnings.simplefilter(action="ignore", category=FutureWarning)
 
         self.file_of_stock = pd.read_csv("data/Stock.csv")
