@@ -14,33 +14,44 @@ from PyQt5.QtCore import *
 from PyQt5 import QtCore
 from PyQt5 import QtGui
 
+"""
+Imported all local python scripts that has been converted from .ui files from Py_Scripts directory
+"""
 from Py_Scripts import LogInDialog, MainDialog, ViewStockDialog, SellingEnterDataDialog, SellingViewDataDialog, \
     SellingDeleteDataDialog
 
-
+    
 class MainDialogWindow(QDialog, MainDialog.Ui_MainDialog):
     def __init__(self):
         QDialog.__init__(self)
         self.setupUi(self)
+        
 
+        # Instance variables for class that is being used in instance methods
         self.view_stock_window_obj = None
         self.selling_enter_data_window_obj = None
         self.selling_view_and_delete_data_window_obj = None
-
+        
+        """
+        To hide buttons at initial level, 
+        when user has not selected radio button (neither "Selling" nor "Purchase")!!!
+        """
         self.btn_enter_data.hide()
         self.btn_view_and_delete_data.hide()
         self.btn_view_graph.hide()
-
+        
+        # Event handlers for buttons to avoid raised exceptions
         self.btn_stock.clicked.connect(self.pop_up_stock_dialog)
-
         self.btn_enter_data.clicked.connect(self.pop_up_selling_enter_data_dialog)
         self.btn_view_and_delete_data.clicked.connect(self.pop_up_selling_view_data_dialog)
-
+    
+    # Event handler function for "stock" button
     def pop_up_stock_dialog(self):
         self.view_stock_window_obj = ViewStockDialogWindow()
         self.view_stock_window_obj.retranslateUi(self.view_stock_window_obj)
         self.view_stock_window_obj.show()
-
+    
+    # Event handler function for "View and Delete" button
     def pop_up_selling_view_data_dialog(self):
         if self.radio_btn_selling.isChecked():
             self.selling_view_and_delete_data_window_obj = SellingViewDataDialogWindow()
@@ -48,7 +59,8 @@ class MainDialogWindow(QDialog, MainDialog.Ui_MainDialog):
             self.selling_view_and_delete_data_window_obj.show()
         else:
             pass
-
+    
+    # Event handler function for "Enter data" button
     def pop_up_selling_enter_data_dialog(self):
         if self.radio_btn_selling.isChecked():
             self.selling_enter_data_window_obj = SellingEnterDataDialogWindow()
