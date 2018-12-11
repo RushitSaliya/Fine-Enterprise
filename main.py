@@ -6,7 +6,6 @@ import sys
 import pandas as pd
 import csv
 import warnings
-
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -14,58 +13,56 @@ from PyQt5.QtCore import *
 from PyQt5 import QtCore
 from PyQt5 import QtGui
 
-"""
-Imported all local python scripts that has been converted from .ui files from Py_Scripts directory
-"""
 from Py_Scripts import LogInDialog, MainDialog, ViewStockDialog, SellingEnterDataDialog, SellingViewDataDialog, \
-    SellingDeleteDataDialog
+    SellingDeleteDataDialog, TotalDetailsDialog
 
-    
+
 class MainDialogWindow(QDialog, MainDialog.Ui_MainDialog):
     def __init__(self):
         QDialog.__init__(self)
         self.setupUi(self)
-        
 
-        # Instance variables for class that is being used in instance methods
         self.view_stock_window_obj = None
         self.selling_enter_data_window_obj = None
         self.selling_view_and_delete_data_window_obj = None
-        
-        """
-        To hide buttons at initial level, 
-        when user has not selected radio button (neither "Selling" nor "Purchase")!!!
-        """
+        self.selling_total_details_window_obj = None
+
         self.btn_enter_data.hide()
         self.btn_view_and_delete_data.hide()
-        self.btn_view_graph.hide()
-        
-        # Event handlers for buttons to avoid raised exceptions
+        self.btn_toal_details.hide()
+
         self.btn_stock.clicked.connect(self.pop_up_stock_dialog)
-        self.btn_enter_data.clicked.connect(self.pop_up_selling_enter_data_dialog)
-        self.btn_view_and_delete_data.clicked.connect(self.pop_up_selling_view_data_dialog)
-    
-    # Event handler function for "stock" button
+
+        self.btn_enter_data.clicked.connect(self.pop_up_enter_data_dialog)
+        self.btn_view_and_delete_data.clicked.connect(self.pop_up_view_data_dialog)
+        self.btn_toal_details.clicked.connect(self.pop_up_total_details)
+
     def pop_up_stock_dialog(self):
         self.view_stock_window_obj = ViewStockDialogWindow()
         self.view_stock_window_obj.retranslateUi(self.view_stock_window_obj)
         self.view_stock_window_obj.show()
-    
-    # Event handler function for "View and Delete" button
-    def pop_up_selling_view_data_dialog(self):
+
+    def pop_up_view_data_dialog(self):
         if self.radio_btn_selling.isChecked():
             self.selling_view_and_delete_data_window_obj = SellingViewDataDialogWindow()
             self.selling_view_and_delete_data_window_obj.retranslateUi(self.selling_view_and_delete_data_window_obj)
             self.selling_view_and_delete_data_window_obj.show()
         else:
             pass
-    
-    # Event handler function for "Enter data" button
-    def pop_up_selling_enter_data_dialog(self):
+
+    def pop_up_enter_data_dialog(self):
         if self.radio_btn_selling.isChecked():
             self.selling_enter_data_window_obj = SellingEnterDataDialogWindow()
             self.selling_enter_data_window_obj.retranslateUi(self.selling_enter_data_window_obj)
             self.selling_enter_data_window_obj.show()
+        else:
+            pass
+
+    def pop_up_total_details(self):
+        if self.radio_btn_selling.isChecked():
+            self.selling_total_details_window_obj = SellingTotalDetailsDialogWindow()
+            self.selling_total_details_window_obj.retranslateUi(self.selling_total_details_window_obj)
+            self.selling_total_details_window_obj.show()
         else:
             pass
 
@@ -207,7 +204,7 @@ class SellingDeleteDataDialogWindow(QDialog, SellingDeleteDataDialog.Ui_SellingD
 
             self.showErrorMessage = QtWidgets.QErrorMessage()
             self.showErrorMessage.setWindowTitle("Success Message")
-            self.showErrorMessage.showMessage("Record successfully deleted!!! 😃")
+            self.showErrorMessage.showMessage("Record deleted successfully!!! 😃")
             self.showErrorMessage.show()
         else:
             self.showErrorMessage = QtWidgets.QErrorMessage()
@@ -259,11 +256,12 @@ class SellingEnterDataDialogWindow(QDialog, SellingEnterDataDialog.Ui_SellingEnt
         self.selling_rate = float(self.line_edit_selling_rate.text())
         self.rate_of_44_size = float(self.line_edit_purchase_rate_of_44_size.text())
 
-        self.final_bill = (self.selling_rate * self.selling_quantity) + \
-                          ((self.selling_rate * self.selling_quantity) * 12) / 100.0
+        self.final_bill = round(((self.selling_rate * self.selling_quantity) +
+                                 ((self.selling_rate * self.selling_quantity) * 12) / 100.0), 3)
         """
-        To avoid FutureWarning in pandas I have written following statement and still
-        if you don't get importance of the following line of code then feel free to erase it!!!
+        To avoid FutureWarning (Basically raised at the time when we use df.set_value() method) in pandas I have written
+        following statement and still if you don't get importance of the following line of code then feel 
+        free to erase it!!! 
         """
         warnings.simplefilter(action="ignore", category=FutureWarning)
 
@@ -278,10 +276,10 @@ class SellingEnterDataDialogWindow(QDialog, SellingEnterDataDialog.Ui_SellingEnt
         self.chalan_no = self.line_edit_chalan_no.text()
         self.remarks = self.text_edit_remarks.toPlainText()
 
-        self.purchase_rate = (self.rate_of_44_size / 44) * self.size
+        self.purchase_rate = round(((self.rate_of_44_size / 44) * self.size), 3)
 
-        self.table_price = (self.selling_rate / 44) * self.size
-        self.profit = (self.table_price - self.purchase_rate) * self.selling_quantity
+        self.table_price = round(((self.selling_rate / 44) * self.size), 3)
+        self.profit = round(((self.table_price - self.purchase_rate) * self.selling_quantity), 3)
 
         self.file_data_entry.write(
             self.date + "," + self.party_name + "," + str(self.gsm) + "," + str(self.size) + "," +
@@ -291,6 +289,39 @@ class SellingEnterDataDialogWindow(QDialog, SellingEnterDataDialog.Ui_SellingEnt
         )
 
         self.file_data_entry.close()
+
+
+class SellingTotalDetailsDialogWindow(QDialog, TotalDetailsDialog.Ui_TotalDetailsDialog):
+    def __init__(self):
+        QDialog.__init__(self)
+        self.setupUi(self)
+        self.show()
+
+        self.btn_ok.clicked.connect(self.hide)
+
+        with open("data/DataEntrySelling.csv", "r") as file:
+            file_reader = csv.reader(file, delimiter=",")
+            rows = len(list(file_reader)) - 1
+
+        self.profit_file = pd.read_csv("data/DataEntrySelling.csv")
+
+        total_profit, total_selling, total_purchase = 0, 0, 0
+        for i in range(rows):
+            total_profit += self.profit_file.at[i, "Profit"]
+            total_selling += self.profit_file.at[i, "Payment+GST(12%)"]
+
+        self.table_widget_total_details.setRowCount(3)
+        self.table_widget_total_details.setColumnCount(2)
+
+        self.table_widget_total_details.setHorizontalHeaderLabels(["Detail", "Rate"])
+
+        self.table_widget_total_details.setItem(0, 0, QTableWidgetItem("Selling"))
+        self.table_widget_total_details.setItem(1, 0, QTableWidgetItem("Purchase"))
+        self.table_widget_total_details.setItem(2, 0, QTableWidgetItem("Profit"))
+
+        self.table_widget_total_details.setItem(0, 1, QTableWidgetItem(str(total_selling)))
+        self.table_widget_total_details.setItem(1, 1, QTableWidgetItem("NIL"))
+        self.table_widget_total_details.setItem(2, 1, QTableWidgetItem(str(total_profit)))
 
 
 application = QApplication(sys.argv)
