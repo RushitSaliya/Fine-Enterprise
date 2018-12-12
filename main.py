@@ -8,13 +8,9 @@ import csv
 import warnings
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5 import QtCore
-from PyQt5 import QtGui
 
-from Py_Scripts import LogInDialog, MainDialog, ViewStockDialog, SellingEnterDataDialog, SellingViewDataDialog, \
-    SellingDeleteDataDialog, TotalDetailsDialog
+from Py_Scripts import LogInDialog, MainDialog, ViewStockDialog, DeleteDataDialog, SellingEnterDataDialog, \
+    SellingViewDataDialog, TotalDetailsDialog, PurchaseEnterDataDialog
 
 
 class MainDialogWindow(QDialog, MainDialog.Ui_MainDialog):
@@ -23,13 +19,17 @@ class MainDialogWindow(QDialog, MainDialog.Ui_MainDialog):
         self.setupUi(self)
 
         self.view_stock_window_obj = None
+
         self.selling_enter_data_window_obj = None
+        self.purchase_enter_data_window_obj = None
+
         self.selling_view_and_delete_data_window_obj = None
-        self.selling_total_details_window_obj = None
+        self.purchase_view_and_delete_data_window_obj = None
+
+        self.total_details_window_obj = None
 
         self.btn_enter_data.hide()
         self.btn_view_and_delete_data.hide()
-        self.btn_toal_details.hide()
 
         self.btn_stock.clicked.connect(self.pop_up_stock_dialog)
 
@@ -48,7 +48,9 @@ class MainDialogWindow(QDialog, MainDialog.Ui_MainDialog):
             self.selling_view_and_delete_data_window_obj.retranslateUi(self.selling_view_and_delete_data_window_obj)
             self.selling_view_and_delete_data_window_obj.show()
         else:
-            pass
+            self.purchase_view_and_delete_data_window_obj = PurchaseViewDataDialogWindow()
+            self.purchase_view_and_delete_data_window_obj.retranslateUi(self.purchase_view_and_delete_data_window_obj)
+            self.purchase_view_and_delete_data_window_obj.show()
 
     def pop_up_enter_data_dialog(self):
         if self.radio_btn_selling.isChecked():
@@ -56,15 +58,14 @@ class MainDialogWindow(QDialog, MainDialog.Ui_MainDialog):
             self.selling_enter_data_window_obj.retranslateUi(self.selling_enter_data_window_obj)
             self.selling_enter_data_window_obj.show()
         else:
-            pass
+            self.purchase_enter_data_window_obj = PurchaseEnterDataDialogWindow()
+            self.purchase_enter_data_window_obj.retranslateUi(self.purchase_enter_data_window_obj)
+            self.purchase_enter_data_window_obj.show()
 
     def pop_up_total_details(self):
-        if self.radio_btn_selling.isChecked():
-            self.selling_total_details_window_obj = SellingTotalDetailsDialogWindow()
-            self.selling_total_details_window_obj.retranslateUi(self.selling_total_details_window_obj)
-            self.selling_total_details_window_obj.show()
-        else:
-            pass
+        self.total_details_window_obj = TotalDetailsDialogWindow()
+        self.total_details_window_obj.retranslateUi(self.total_details_window_obj)
+        self.total_details_window_obj.show()
 
 
 class LoginDialogWindow(QDialog, LogInDialog.Ui_LoginDialog):
@@ -159,7 +160,7 @@ class SellingViewDataDialogWindow(QDialog, SellingViewDataDialog.Ui_SellingViewD
         self.delete_data_obj.show()
 
 
-class SellingDeleteDataDialogWindow(QDialog, SellingDeleteDataDialog.Ui_SellingDeleteDataDialog):
+class SellingDeleteDataDialogWindow(QDialog, DeleteDataDialog.Ui_DeleteDataDialog):
     def __init__(self):
         QDialog.__init__(self)
         self.setupUi(self)
@@ -291,7 +292,7 @@ class SellingEnterDataDialogWindow(QDialog, SellingEnterDataDialog.Ui_SellingEnt
         self.file_data_entry.close()
 
 
-class SellingTotalDetailsDialogWindow(QDialog, TotalDetailsDialog.Ui_TotalDetailsDialog):
+class TotalDetailsDialogWindow(QDialog, TotalDetailsDialog.Ui_TotalDetailsDialog):
     def __init__(self):
         QDialog.__init__(self)
         self.setupUi(self)
@@ -304,11 +305,13 @@ class SellingTotalDetailsDialogWindow(QDialog, TotalDetailsDialog.Ui_TotalDetail
             rows = len(list(file_reader)) - 1
 
         self.profit_file = pd.read_csv("data/DataEntrySelling.csv")
+        self.purchase_file = pd.read_csv("data/DataEntryPurchase.csv")
 
         total_profit, total_selling, total_purchase = 0, 0, 0
         for i in range(rows):
             total_profit += self.profit_file.at[i, "Profit"]
             total_selling += self.profit_file.at[i, "Payment+GST(12%)"]
+            total_purchase += self.profit_file.at[i, "Payment+GST(12%)"]
 
         self.table_widget_total_details.setRowCount(3)
         self.table_widget_total_details.setColumnCount(2)
@@ -320,125 +323,173 @@ class SellingTotalDetailsDialogWindow(QDialog, TotalDetailsDialog.Ui_TotalDetail
         self.table_widget_total_details.setItem(2, 0, QTableWidgetItem("Profit"))
 
         self.table_widget_total_details.setItem(0, 1, QTableWidgetItem(str(total_selling)))
-        self.table_widget_total_details.setItem(1, 1, QTableWidgetItem("NIL"))
+        self.table_widget_total_details.setItem(1, 1, QTableWidgetItem(str(total_purchase)))
         self.table_widget_total_details.setItem(2, 1, QTableWidgetItem(str(total_profit)))
+
+
+class PurchaseEnterDataDialogWindow(QDialog, PurchaseEnterDataDialog.Ui_PurchaseEnterDataDialog):
+    def __init__(self):
+        QDialog.__init__(self)
+        self.setupUi(self)
+        self.show()
+
+        self.dict_size_to_index = None
+        self.file_data_entry = None
+        self.date = None
+        self.party_name = None
+        self.gsm = None
+        self.size = None
+        self.purchase_quantity = None
+        self.purchase_rate_entered_by_user = None
+        self.rate_of_44_size = None
+        self.final_bill = None
+        self.file_of_stock = None
+        self.stock = None
+        self.payment_paid_date = None
+        self.paid_amount = None
+        self.cheque_no = None
+        self.bill_no = None
+        self.remarks = None
+        self.purchase_rate = None
+        self.table_price = None
+
+        self.btn_add_record.clicked.connect(self.set_data)
+        self.btn_add_record.clicked.connect(self.hide)
+        self.btn_cancel.clicked.connect(self.hide)
+
+    def set_data(self):
+        self.dict_size_to_index = {36: 0, 44: 1, 48: 2, 54: 3, 58: 4, 60: 5, 63: 6}
+
+        self.file_data_entry = open("data/DataEntryPurchase.csv", "a+")
+        self.date = self.date_edit_date.text()
+        self.party_name = self.line_edit_party_name.text()
+        self.gsm = int(self.combo_box_gsm.currentText())
+        self.size = int(self.combo_box_size.currentText())
+        self.purchase_quantity = int(self.line_edit_qty.text())
+        self.purchase_rate_entered_by_user = float(self.line_edit_selling_rate.text())
+        self.rate_of_44_size = float(self.line_edit_purchase_rate_of_44_size.text())
+
+        self.final_bill = round(((self.purchase_rate_entered_by_user * self.purchase_quantity) +
+                                 ((self.purchase_rate_entered_by_user * self.purchase_quantity) * 12) / 100.0), 3)
+
+        warnings.simplefilter(action="ignore", category=FutureWarning)
+
+        self.file_of_stock = pd.read_csv("data/Stock.csv")
+        self.stock = self.file_of_stock.at[self.dict_size_to_index[self.size], "Qty"]
+        self.file_of_stock.set_value(self.dict_size_to_index[self.size], "Qty", self.stock + self.purchase_quantity)
+        self.file_of_stock.to_csv("data/Stock.csv", index=None)
+
+        self.payment_paid_date = self.date_edit_payment_paid_date.text()
+        self.paid_amount = float(self.line_edit_payment_paid_amount.text())
+        self.cheque_no = self.line_edit_cheque_no.text()
+        self.bill_no = self.line_edit_chalan_no.text()
+        self.remarks = self.text_edit_remarks.toPlainText()
+
+        self.file_data_entry.write(
+            self.date + "," + self.party_name + "," + str(self.gsm) + "," + str(self.size) + "," +
+            str(self.purchase_quantity) + "," + str(self.purchase_rate_entered_by_user) + "," + str(self.final_bill)
+            + "," + self.payment_paid_date + "," + str(self.paid_amount) + "," + self.cheque_no + "," +
+            self.bill_no + "," + self.remarks + "\n"
+        )
+
+        self.file_data_entry.close()
+
+
+class PurchaseViewDataDialogWindow(QDialog, SellingViewDataDialog.Ui_SellingViewDataDialog):
+    def __init__(self):
+        QDialog.__init__(self)
+        self.setupUi(self)
+        self.showFullScreen()
+
+        self.delete_data_obj = None
+
+        self.btn_delete.clicked.connect(self.delete_record)
+        self.btn_ok.clicked.connect(self.hide)
+
+        with open("data/DataEntryPurchase.csv", "r") as file:
+            file_reader = csv.reader(file, delimiter=",")
+            rows = len(list(file_reader)) - 1
+
+        self.table_widget_view_data.setRowCount(rows)
+        self.table_widget_view_data.setColumnCount(12)
+
+        purchase_data_entry = pd.read_csv("data/DataEntryPurchase.csv")
+
+        dict_headers = {0: "Date", 1: "Party", 2: "GSM", 3: "Size", 4: "Qty", 5: "Rate", 6: "Payment+GST(12%)",
+                        7: "Payment Date", 8: "Paid Amount", 9: "Cheque No.", 10: "Bill No.",
+                        11: "Remarks"}
+
+        self.table_widget_view_data.setHorizontalHeaderLabels(["Date", "Party", "GSM", "Size", "Qty", "Rate",
+                                                               "Payment+GST(12%)", "Payment Date", "Paid Amount",
+                                                               "Cheque No.", "Bill No.", "Remarks"])
+
+        for i in range(rows):
+            for j in dict_headers:
+                self.value = str(purchase_data_entry.at[i, dict_headers[j]])
+                self.table_widget_view_data.setItem(i, j, QTableWidgetItem(self.value))
+
+    def delete_record(self):
+        self.delete_data_obj = PurchaseDeleteDataDialogWindow()
+        self.delete_data_obj.retranslateUi(self.delete_data_obj)
+        self.delete_data_obj.show()
+
+
+class PurchaseDeleteDataDialogWindow(QDialog, DeleteDataDialog.Ui_DeleteDataDialog):
+    def __init__(self):
+        QDialog.__init__(self)
+        self.setupUi(self)
+        self.show()
+
+        self.index = None
+        self.showErrorMessage = None
+        self.file_of_purchase = None
+        self.file_of_stock = None
+        self.deleted_stock = None
+        self.existing_stock = None
+        self.size = None
+
+        self.dict_size_to_index = {36: 0, 44: 1, 48: 2, 54: 3, 58: 4, 60: 5, 63: 6}
+
+        self.btn_delete.clicked.connect(self.delete_selected_record)
+        self.btn_delete.clicked.connect(self.hide)
+
+    def delete_selected_record(self):
+        self.index = int(self.line_edit_index.text()) - 1
+
+        with open("data/DataEntryPurchase.csv", "r") as file:
+            file_reader = csv.reader(file, delimiter=",")
+            rows = len(list(file_reader)) - 1
+
+        self.file_of_purchase = pd.read_csv("data/DataEntryPurchase.csv")
+        self.file_of_stock = pd.read_csv("data/Stock.csv")
+
+        warnings.simplefilter(action="ignore", category=FutureWarning)
+
+        self.deleted_stock = self.file_of_purchase.at[self.index, "Qty"]
+        self.size = self.file_of_purchase.at[self.index, "Size"]
+        self.existing_stock = self.file_of_stock.at[self.dict_size_to_index[self.size], "Qty"]
+
+        self.file_of_stock.set_value(self.dict_size_to_index[self.size], "Qty",
+                                     self.existing_stock - self.deleted_stock)
+        self.file_of_stock.to_csv("data/Stock.csv", index=None)
+
+        if self.index < rows:
+            file = pd.read_csv("data/DataEntryPurchase.csv")
+            file.drop(file.index[self.index], inplace=True)
+            file.to_csv("data/DataEntryPurchase.csv", index=None)
+
+            self.showErrorMessage = QtWidgets.QErrorMessage()
+            self.showErrorMessage.setWindowTitle("Success Message")
+            self.showErrorMessage.showMessage("Record deleted successfully!!! 😃")
+            self.showErrorMessage.show()
+        else:
+            self.showErrorMessage = QtWidgets.QErrorMessage()
+            self.showErrorMessage.setWindowTitle("Error Message")
+            self.showErrorMessage.showMessage("Index out of bound!!! 😬")
+            self.showErrorMessage.show()
 
 
 application = QApplication(sys.argv)
 login_screen = LoginDialogWindow()
 login_screen.show()
 application.exec_()
-
-
-"""
-dict_size_to_index = {36: 0, 44: 1, 48: 2, 54: 3, 58: 4, 60: 5, 63: 6}
-
-
-def purchase():
-    file_data_entry = open("data/DataEntryPurchase.csv", "a+")
-    date = input("Date: ")
-    party_name = input("Party name: ")
-    gsm = int(input("GSM: "))
-    size = int(input("Size: "))
-    purchase_quantity = int(input("Quantity: "))
-    rate_of_44_size = float(input("Purchase rate of 44 size: "))
-
-    purchase_rate = (rate_of_44_size / 44) * size
-
-    file_of_stock = pd.read_csv("data/Stock.csv")
-    stock = file_of_stock.at[dict_size_to_index[size], "Qty"]
-    file_of_stock.set_value(dict_size_to_index[size], "Qty", stock + purchase_quantity)
-    file_of_stock.to_csv("data/Stock.csv", index=None)
-
-    final_bill = (purchase_rate * purchase_quantity) + (((purchase_rate * purchase_quantity) * 12) / 100.0)
-
-    payment_paid_date = input("Payment paid date: ")
-    paid_amount = float(input("Paid amount: "))
-    cheque_no = input("Cheque No.: ")
-    bill_no = input("Bill No.: ")
-    remarks = input("Remarks: ")
-
-    file_data_entry.write(
-        date + "," + party_name + "," + str(gsm) + "," + str(size) + "," + str(purchase_quantity) + "," +
-        str(purchase_rate) + "," + str(final_bill) + "," + party_name + "," + payment_paid_date + "," + str(paid_amount)
-        + "," + cheque_no + "," + bill_no + "," + remarks + "\n"
-    )
-    file_data_entry.close()
-
-
-if __name__ == "__main__":
-    pwd = "MMS8050"
-    passWord = input("Password: ")
-    if passWord == pwd:
-        print("Logged in successfully!!!\n")
-
-        while True:
-            choice = int(input("1.Enter Data\n2.View Data\n3.Delete Data\n4.Exit\n\nEnter your choice: "))
-
-            if choice == 1:
-                selling_or_purchase = int(input("\n1.Enter Selling Data\n2.Enter Purchase Data\n\nEnter your choice: "))
-                if selling_or_purchase == 1:
-                    selling()
-                    response = input("\nPress any key to continue....")
-                    continue
-
-                elif selling_or_purchase == 2:
-                    purchase()
-                    response = input("\nPress any key to continue....")
-                    continue
-
-                else:
-                    print("\nInvalid choice!!!\nPlease enter valid choice!!!\n")
-                    response = input("\nPress any key to continue....")
-                    continue
-
-            elif choice == 2:
-                selling_or_purchase = int(input("\n1.View Selling Data\n2.View Purchase Data\n\nEnter your choice: "))
-                if selling_or_purchase == 1:
-                    view_selling_data()
-                    response = input("\nPress any key to continue....")
-                    continue
-
-                elif selling_or_purchase == 2:
-                    view_purchase_data()
-                    response = input("\nPress any key to continue....")
-                    continue
-
-                else:
-                    print("\nInvalid choice!!!\nPlease enter valid choice!!!\n")
-                    response = input("\nPress any key to continue....")
-                    continue
-
-            elif choice == 3:
-                selling_or_purchase = int(input("\n1.Delete Selling Data\n2.Delete Purchase Data\n\nEnter your choice: "))
-                if selling_or_purchase == 1:
-                    view_selling_data()
-                    index = int(input("Enter index number: "))
-                    df = pd.read_csv("data/DataEntrySelling.csv")
-                    df.drop(df.index[index], inplace=True)
-                    df.to_csv("data/DataEntrySelling.csv", index=None)
-                    response = input("\nPress any key to continue....")
-                    continue
-
-                elif selling_or_purchase == 2:
-                    view_purchase_data()
-                    index = int(input("Enter index number: "))
-                    df = pd.read_csv("data/DataEntryPurchase.csv")
-                    df.drop(df.index[index], inplace=True)
-                    df.to_csv("data/DataEntryPurchase.csv", index=None)
-                    response = input("\nPress any key to continue....")
-                    continue
-
-                else:
-                    print("\nInvalid choice!!!\nPlease enter valid choice!!!\n")
-                    response = input("\nPress any key to continue....")
-                    continue
-
-            elif choice == 4:
-                exit(0)
-
-            else:
-                print("\nInvalid choice!!!\nPlease enter valid choice!!!\n")
-
-    else:
-        print("Permission denied!!!\nEnter correct password!!!\n")"""
