@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainDialog</class>
+ <widget class="QDialog" name="MainDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>750</width>
+    <height>426</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Fine Enterprise</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="0">
+    <widget class="QLabel" name="lbl_category">
+     <property name="font">
+      <font>
+       <family>Times New Roman</family>
+       <pointsize>14</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Category:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QRadioButton" name="radio_btn_selling">
+     <property name="font">
+      <font>
+       <family>Times New Roman</family>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Selling</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QPushButton" name="btn_stock">
+     <property name="text">
+      <string>View Stock</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QRadioButton" name="radio_btn_purchase">
+     <property name="font">
+      <font>
+       <family>Times New Roman</family>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Purchase</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="3">
+    <widget class="QLabel" name="lbl_fine_enterprise">
+     <property name="font">
+      <font>
+       <family>Mongolian Baiti</family>
+       <pointsize>30</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Fine Enterprise</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QPushButton" name="btn_toal_details">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="text">
+      <string>View Totals</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QPushButton" name="btn_enter_data">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="font">
+      <font>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Enter Data</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QPushButton" name="btn_view_and_delete_data">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="text">
+      <string>View and Delete Data</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>radio_btn_selling</sender>
+   <signal>clicked()</signal>
+   <receiver>btn_enter_data</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>155</x>
+     <y>106</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>124</x>
+     <y>160</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radio_btn_selling</sender>
+   <signal>clicked()</signal>
+   <receiver>btn_view_and_delete_data</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>173</x>
+     <y>106</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>101</x>
+     <y>211</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radio_btn_selling</sender>
+   <signal>clicked()</signal>
+   <receiver>btn_toal_details</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>179</x>
+     <y>111</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>73</x>
+     <y>279</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radio_btn_purchase</sender>
+   <signal>clicked()</signal>
+   <receiver>btn_enter_data</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>271</x>
+     <y>109</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>305</x>
+     <y>169</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radio_btn_purchase</sender>
+   <signal>clicked()</signal>
+   <receiver>btn_view_and_delete_data</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>269</x>
+     <y>108</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>322</x>
+     <y>208</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radio_btn_purchase</sender>
+   <signal>clicked()</signal>
+   <receiver>btn_toal_details</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>228</x>
+     <y>104</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>352</x>
+     <y>272</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

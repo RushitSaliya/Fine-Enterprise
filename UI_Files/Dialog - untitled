@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AddDataDialog</class>
+ <widget class="QDialog" name="AddDataDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Add Record</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="7" column="0">
+    <widget class="QLabel" name="lbl_description">
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Description:</string>
+     </property>
+     <property name="buddy">
+      <cstring>text_edit_description</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0">
+    <widget class="QLabel" name="lbl_price_per_unit">
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Price per Unit:</string>
+     </property>
+     <property name="buddy">
+      <cstring>line_edit_price_per_unit</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="lbl_name_of_product">
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Name of Product:</string>
+     </property>
+     <property name="buddy">
+      <cstring>line_edit_name_of_product</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1" colspan="2">
+    <widget class="QLineEdit" name="line_edit_name_of_product"/>
+   </item>
+   <item row="6" column="1" colspan="2">
+    <widget class="QLineEdit" name="line_edit_price_per_unit"/>
+   </item>
+   <item row="1" column="2">
+    <widget class="QRadioButton" name="radio_btn_sell">
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Sell</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="lbl_date">
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Date:</string>
+     </property>
+     <property name="buddy">
+      <cstring>date_edit_date</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1" colspan="2">
+    <widget class="QLineEdit" name="line_edit_quantity"/>
+   </item>
+   <item row="9" column="3">
+    <widget class="QPushButton" name="btn_cancel">
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Cancel</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QRadioButton" name="radio_btn_buy">
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Buy</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="lbl_quantity">
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Quantity:</string>
+     </property>
+     <property name="buddy">
+      <cstring>line_edit_quantity</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1" colspan="2">
+    <widget class="QDateEdit" name="date_edit_date">
+     <property name="calendarPopup">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1" colspan="2">
+    <widget class="QTextEdit" name="text_edit_description"/>
+   </item>
+   <item row="8" column="3">
+    <widget class="QPushButton" name="btn_add">
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Add</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>line_edit_name_of_product</tabstop>
+  <tabstop>line_edit_quantity</tabstop>
+  <tabstop>line_edit_price_per_unit</tabstop>
+  <tabstop>text_edit_description</tabstop>
+  <tabstop>btn_add</tabstop>
+  <tabstop>btn_cancel</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>
